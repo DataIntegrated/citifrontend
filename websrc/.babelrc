@@ -1,0 +1,9 @@
+{
+  "plugins": [
+    "styled-jsx/babel",
+    "inline-react-svg",
+    "transform-decorators-legacy",
+    "transform-class-properties"
+  ],
+  "presets": ["flow", "react", "stage-2"]
+}
