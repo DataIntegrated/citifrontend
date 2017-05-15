@@ -12,6 +12,7 @@ class MerchantStore {
   constructor() {
     this.fetchMerchants();
     this.list = [];
+    this.singleSummary = {};
   }
 
   async fetchSingleMerchantSummary(pin: string, year: number, month: number) {
@@ -24,6 +25,7 @@ class MerchantStore {
 
       let json = await wrapError(request(url, "POST", { year, month, pin }));
       this.singleSummary = json;
+      console.log(json)
     } catch (err) {
       singleNote.new("error", `Merchants: ${err.message}`);
       console.error("fetching merchants", err);

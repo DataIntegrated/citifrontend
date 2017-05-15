@@ -3,6 +3,9 @@
 import React, { Component } from "react";
 import { observer } from "mobx-react";
 import { Statistic } from "semantic-ui-react";
+import { Chart } from "react-d3-core";
+// require `react-d3-basic` for Line chart component.
+import { LineChart } from "react-d3-basic";
 
 import merchantStore from "../stores/merchants";
 import taxdeviceStore from "../stores/taxdevices";
@@ -102,16 +105,58 @@ function currencyf(n: number) {
   }
 }
 
+function TheChart(props: Object) {
+  let store = props.store;
+
+  return (
+    <div className="charts">
+      <Chart
+        title={"VAT"}
+        width={700}
+        height={300}
+        margins={{ left: 100, right: 100, top: 50, bottom: 50 }}
+      >
+        <LineChart
+          margins={{ left: 100, right: 100, top: 50, bottom: 50 }}
+          title={"VAT"}
+          data={store.today.slice()}
+          width={700}
+          height={300}
+          chartSeries={[
+            {
+              field: "amount2",
+              name: "sale",
+              color: "#ff7f0e",
+              style: {
+                "strokeWidth": 2,
+                "strokeOpacity": 0.2,
+                "fillOpacity": 0.2
+              }
+            }
+          ]}
+          x={function(d) {
+            return new Date(d.timestamp).getTime();
+          }}
+        />
+      </Chart>
+    </div>
+  );
+}
+
 export default class Summary extends React.Component {
   render() {
+    let store = this.props.store;
     return (
       <div className="summary">
         <div className="stat1">
           <NumMerchants store={merchantStore} />
           <NumTaxDevices store={taxdeviceStore} />
           <NumTransactions store={transactionStore} />
-        </div>
 
+        </div>
+        <div className="charts">
+          <TheChart store={transactionStore} />
+        </div>
         <style jsx>{`
           .summary {
             width: 90vw;

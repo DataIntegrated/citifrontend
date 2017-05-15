@@ -37,13 +37,13 @@ class TransactionStore {
     return sum;
   }
 
-
   constructor() {
     this.today = [];
     this.todayTax = {};
 
     this.todaysTransactions();
     this.todaysTax();
+    this.pollTodaysTransactions();
   }
 
   async todaysTransactions() {
@@ -53,6 +53,13 @@ class TransactionStore {
     let res = await request(url, "post", data);
     let json = await res.json();
     this.today = json;
+    console.log(json)
+  }
+
+  pollTodaysTransactions() {
+    setInterval(() => {
+      this.todaysTransactions();
+    }, 2500);
   }
 
   async todaysTax() {

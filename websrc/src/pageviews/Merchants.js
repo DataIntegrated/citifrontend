@@ -2,13 +2,14 @@
 import type JSX from "react";
 
 import React, { Component } from "react";
-import { Input, Button } from "semantic-ui-react";
+import { Input, Button, Statistic } from "semantic-ui-react";
 import { observer } from "mobx-react";
 
 import { Link, redirect } from "../routing/Router";
 
 import former from "../components/FormFromObject";
 import AutoTable from "../components/Table";
+import DatePicker from "../components/Datepicker.js";
 
 import { createNewMerchant } from "../util/vatserver";
 import merchantStore from "../stores/merchants";
@@ -82,9 +83,49 @@ class NewMerchant extends Component<void, MerchantStoreProps, void> {
     super(props);
   }
   componentWillMount() {
-    this.props.store.fetchSingleMerchantSummary()
+    this.props.store.fetchSingleMerchantSummary(this.props.pin);
   }
-  render() { return null }
+  datePick(data) {
+    console.log("date pick");
+    this.props.store.fetchSingleMerchantSummary(
+      this.props.pin,
+      data.year,
+      data.month
+    );
+  }
+  render() {
+    let store = this.props.store;
+    return (
+      <div className="single-merchant">
+        <div className="header">
+          <DatePicker onClick={this.datePick.bind(this)} />
+        </div>
+        <div className="body">
+          <div className="stat">
+            <Statistic value={store.singleSummary.sales} label={"sales"} />
+            <Statistic
+              value={store.singleSummary.purchases}
+              label={"purchases"}
+            />
+            <Statistic
+              value={store.singleSummary.vatDue}
+              label={"VAT due"}
+            />
+            <Statistic
+              value={store.singleSummary.vatPaid}
+              label={"VAT Paid"}
+            />
+          </div>
+        </div>
+
+        <style jsx>{`
+          .body {
+            margin-top: 25px;
+          }
+        `}</style>
+      </div>
+    );
+  }
 }
 
 type MerchantProps = {
@@ -109,7 +150,7 @@ export default class Merchants extends React.Component {
     let props = p || this.props;
     let option = props.match.option;
     let pin = props.match.id;
-    
+
     switch (option) {
       case "new":
         return this.setState({
@@ -171,24 +212,24 @@ export default class Merchants extends React.Component {
 
         <style jsx>
           {`
-        .merchant-view {
-          width: 100vw;
-        }
-        .wrapper {
-          width: 85%;
-          margin: auto;
-        }
-        .header {
-          padding-top: 5px;
-          margin-bottom: 25px;
-        }
-        .header.single {
-          opacity: 0;
-        }
-        .merchant :global(input) {
-          margin-bottom: 2px;
-        }
-      `}
+            .merchant-view {
+              width: 100vw;
+            }
+            .wrapper {
+              width: 85%;
+              margin: auto;
+            }
+            .header {
+              padding-top: 5px;
+              margin-bottom: 25px;
+            }
+            .header.single {
+              opacity: 0;
+            }
+            .merchant :global(input) {
+              margin-bottom: 2px;
+            }
+         `}
         </style>
       </div>
     );
