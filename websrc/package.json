@@ -43,6 +43,7 @@
     "css-loader": "^0.28.1",
     "flow-bin": "^0.42.0",
     "minireset.css": "^0.0.3",
+    "prismjs": "^1.6.0",
     "react-test-renderer": "^15.4.2",
     "style-loader": "^0.17.0",
     "styled-jsx": "^0.5.7",
